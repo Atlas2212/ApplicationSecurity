@@ -95,7 +95,8 @@ def create_account():
     
     regex_password = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"
     if re.search(regex_password,new_password) == None: #checks if password meets minimum requirements
-      flash_msg('''At least one upper case English letter,
+      flash_msg('''Password requires:
+At least one upper case English letter,
 At least one lower case English letter,
 At least one digit,
 At least one special character,
@@ -166,6 +167,12 @@ def change_password():
         current_user.password = bcrypt.generate_password_hash(new_password)
         db.session.commit()
         flash_msg("Password changed sucessfully")
+        email = current_user.email
+        username = current_user.username
+        msg = Message('Change password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+        msg.body = f"Hey {username}, your Password was changed, if this is not done by you, please immediately change your password and contact us"
+        mail.send(msg)
+
       else:
         flash_msg("Old password is invalid")
         return(redirect(url_for("change_password_site")))
