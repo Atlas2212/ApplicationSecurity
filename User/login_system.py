@@ -185,7 +185,7 @@ def two_factor_site():
     current_user.otp_expire = datetime.now() + timedelta (minutes=15)
     email = current_user.email
     db.session.commit()
-    msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+    msg = Message('OTP for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
     msg.body = f"Hey {username}, your otp is {secret}. Do not share your otp with others"
     mail.send(msg)
   except:
