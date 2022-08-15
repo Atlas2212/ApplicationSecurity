@@ -4,6 +4,8 @@ from flask import redirect, url_for
 from flask_login import login_required
 from main import db, Users_db
 from flask import session as user_session
+import defusedxml.ElementTree as ET
+
 
 @app.route("/make_admin")
 @login_required
@@ -27,6 +29,13 @@ def main_admin():
   if is_admin == None:
     return redirect(url_for("login"))
   elif is_admin == True:
-    return render_template("/admin/homepage.html")
+    tree=ET.parse("admin/info.xml")
+    root=tree.getroot()
+    lst = []
+    for child in root:
+      for item in child:
+        lst.append([child.attrib,item.tag,item.text])
+    return render_template("/admin/homepage.html",xml_lst=lst)
   elif is_admin == False:
     return redirect(url_for("main"))
+  
