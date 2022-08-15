@@ -1,17 +1,31 @@
 {% extends "admin/base.html" %}
 {% block content %}
-<link rel="stylesheet" href="static/delta.css">
+<link rel="stylesheet" href="static\table.css">
 <body>
-<table>
-<tr><th>item id</th><th>name</th><th>price</th></tr>
-{% for item in product_lst %}
-  <tr>
-  <td>{{item["item_id"]}}</td>
-  <td>{{item["name"]}}</td>
-  <td>${{item["price"]}}</td>
-  </tr>
-{% endfor %}
-Create Item
+  <style>
+    .container {
+      font-family: Quicksand-Bold;
+    }
+  </style>
+<div class="container">
+  <h2 style="padding-top: 3%; padding-bottom: 3%; font-family: Quicksand-Bold;">Product List</h2>
+  <table class="table table-bordered table-striped table-responsive-stack"  id="tableOne">
+     <thead class="thead-dark">
+      <tr><th>Item ID</th><th>Item Name</th><th>Item Price</th></tr>
+     </thead>
+     <tbody>
+      {% for item in product_lst %}
+      <tr>
+      <td>{{item["item_id"]}}</td>
+      <td>{{item["name"]}}</td>
+      <td>${{item["price"]}}</td>
+      </tr>
+    {% endfor %}
+     </tbody>
+  </table>
+</div>
+
+
 </table>
 <form action="/admin/api/add_item" method="get">
 <input type="text" name="name">
