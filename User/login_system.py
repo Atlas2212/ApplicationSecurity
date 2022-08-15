@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import redirect, render_template
 from flask import  url_for
 from flask import request, request, flash
@@ -8,6 +9,8 @@ from __main__ import app
 from main import Users_db, db,bcrypt,mail
 from flask_mail import Message
 import re
+import pyotp
+from datetime import datetime,timedelta
 
 def flash_msg(msg):
   user_session.pop('_flashes', None)
@@ -47,6 +50,9 @@ def signin():
             return redirect(url_for("login"))
 
         if bcrypt.check_password_hash(current_user.password,password): #Compares password hashes of the password inputed and the password stored
+            if current_user.two_fa == True:
+              user_session["username"] = username
+              return(redirect(url_for("two_factor_site")))
             login_user(current_user)
             current_user.token = get_random_string(8)
             current_user.login_attempt = 0 #reset login attempt
@@ -110,29 +116,114 @@ Minimum eight characters''')
     return(redirect(url_for("internal_server_error")))
 
 @app.route("/api/reset_password",methods=["GET","POST"])
-@login_required
 def password_reset():
   try:
-    token = user_session["token"]
-    reset_password = request.form.get("reset_password")
-    exists = db.session.query(Users_db.username).filter_by(token=token).first() is not None
-    if reset_password == "Yes":
-      if exists:
-          current_user = Users_db.query.filter_by(token=token).first()
-          temp = get_random_string(12)
-          username = current_user.username
-          email = current_user.email
-          current_user.password = bcrypt.generate_password_hash(temp) #hash randomly generated password
-          msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
-          msg.body = f"Hey {username}, your new password is {temp}"
-          mail.send(msg)
-          db.session.commit()
-      else:
+    username = request.form.get("username")
+    exists = db.session.query(Users_db.username).filter_by(username=username).first() is not None
+    if exists:
+        current_user = Users_db.query.get(username)
+        temp = get_random_string(12)
+        username = current_user.username
+        email = current_user.email
+        current_user.password = bcrypt.generate_password_hash(temp) #hash randomly generated password
+        msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+        msg.body = f"Hey {username}, your new password is {temp}"
+        mail.send(msg)
+        db.session.commit()
+        return(redirect(url_for("login")))
+    else:
         return(redirect(url_for("login")))
   except:
     return(redirect(url_for("login")))
     
 @app.route("/reset_password")
-@login_required
 def reset_password_site():
   return(render_template("frontend/reset_password.html"))
+
+@app.route("/change_password")
+def change_password_site():
+  return(render_template("frontend/change_password.html"))
+
+@app.route("/api/change_password", methods=["POST","GET"])
+@login_required
+def change_password():
+  try:
+    token = user_session["token"]
+    old_password = request.form.get("old_password")
+    new_password = request.form.get("new_password")
+    confirm_password = request.form.get("confirm_password")
+  except:
+    flash_msg("please input a valid passsword or new password")
+    return(redirect(url_for("change_password_site")))
+  try:
+    exists = db.session.query(Users_db.token).filter_by(token=token).first() is not None
+    if exists:
+      current_user = Users_db.query.filter_by(token=token).first()
+      if new_password != confirm_password:
+        flash_msg("Password and confirm password do not match")
+        return(redirect(url_for("change_password_site")))
+      if bcrypt.check_password_hash(current_user.password,old_password) :
+        current_user.password = bcrypt.generate_password_hash(new_password)
+        db.session.commit()
+        flash_msg("Password changed sucessfully")
+      else:
+        flash_msg("Old password is invalid")
+        return(redirect(url_for("change_password_site")))
+    return redirect(url_for("change_password_site"))
+  except:
+    return(redirect(url_for("internal_server_error")))
+
+@app.route("/2FA")
+def two_factor_site():
+  try:
+    username = user_session["username"]
+    if Users_db.query.get(username) is None:
+      return(redirect(url_for("login")))
+    current_user = Users_db.query.get(username)
+    secret = pyotp.TOTP('base32secret3232').now()
+    current_user.otp = secret
+    current_user.otp_expire = datetime.now() + timedelta (minutes=15)
+    email = current_user.email
+    db.session.commit()
+    msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+    msg.body = f"Hey {username}, your otp is {secret}. Do not share your otp with others"
+    mail.send(msg)
+  except:
+    return(redirect(url_for("login")))
+  return render_template("frontend/two_factor.html")
+
+@app.route("/api/2FA" ,methods=["POST","GET"])
+def two_factor():
+  try:
+    otp = request.form.get("otp")
+    username = user_session["username"]
+    current_user = Users_db.query.get(username)
+    secret = current_user.otp
+    if current_user.otp_expire is None or secret == "":
+      del user_session["username"]
+      return(redirect(url_for("login")))
+    if datetime.now() > current_user.otp_expire:
+      flash_msg("OTP has expired")
+      del user_session["username"]
+      return(redirect(url_for("login")))
+  except:
+    return(redirect(url_for("login")))
+  if secret == otp:
+    current_user = Users_db.query.get(username)
+    login_user(current_user)
+    current_user.token = get_random_string(8)
+    current_user.login_attempt = 0 #reset login attempt
+    db.session.commit()
+    user_session["token"] = current_user.token
+    user_session["admin"] = current_user.admin
+    current_user.otp_expire = None
+    current_user.otp = ""
+    db.session.commit()
+    if current_user.admin == True:
+      return(redirect(url_for("main_admin")))
+    else:
+      return(redirect(url_for("main")))
+  else:
+    flash_msg("Invalid OTP entered")
+    return(redirect(url_for("two_factor_site")))
+  
