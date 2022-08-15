@@ -1,4 +1,5 @@
 from datetime import datetime
+from xml.etree.ElementInclude import include
 from flask import redirect, render_template
 from flask import  url_for
 from flask import request, request, flash
@@ -123,16 +124,23 @@ def password_reset():
     exists = db.session.query(Users_db.username).filter_by(username=username).first() is not None
     if exists:
         current_user = Users_db.query.get(username)
-        temp = get_random_string(12)
         username = current_user.username
+        user_session["username"] = username
         email = current_user.email
-        current_user.password = bcrypt.generate_password_hash(temp) #hash randomly generated password
-        msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
-        msg.body = f"Hey {username}, your new password is {temp}"
-        mail.send(msg)
+        secret_token= pyotp.random_base32()
+        secret_token_exists =  db.session.query(Users_db.username).filter_by(reset_password_key=secret_token).first() is not None
+        while secret_token_exists:
+          secret_token= pyotp.random_base32() + bcrypt.generate_password_hash(username)
+          secret_token_exists =  db.session.query(Users_db.username).filter_by(reset_password_key=secret_token).first() is not None
+        current_user.reset_password_key = secret_token
+        current_user.reset_password_key_expire = datetime.now() + timedelta (minutes=15)
         db.session.commit()
+        msg = Message('OTP for reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+        msg.body = f"Hey {username}, did you want to reset your password, if you did enter click on this link https://127.0.0.1:5000/reset_password/{secret_token}"
+        mail.send(msg)
         return(redirect(url_for("login")))
     else:
+        flash_msg("Invalid username was entered")
         return(redirect(url_for("login")))
   except:
     return(redirect(url_for("login")))
@@ -234,3 +242,36 @@ def two_factor():
     flash_msg("Invalid OTP entered")
     return(redirect(url_for("two_factor_site")))
   
+  
+@app.route("/reset_password/<secret_key>")
+def reset_password(secret_key):
+  try:
+    exists = db.session.query(Users_db.username).filter_by(reset_password_key=secret_key).first() is not None
+    if exists:
+      target_user = Users_db.query.filter_by(reset_password_key=secret_key).first()
+      if target_user.reset_password_key is None:
+        flash_msg("Invalid Reset password link")
+        target_user.reset_password_key = None
+        target_user.reset_password_key_expire = None
+        db.session.commit()
+        return(redirect(url_for("login")))
+      if datetime.now() > target_user.reset_password_key_expire:
+        flash_msg("Reset password link has expired")
+        target_user.reset_password_key = None
+        target_user.reset_password_key_expire = None
+        db.session.commit()
+        return(redirect(url_for("login")))
+      temp = get_random_string(15)
+      target_user.password = bcrypt.generate_password_hash(temp)
+      target_user.reset_password_key = None
+      target_user.reset_password_key_expire = None
+      email = target_user.email
+      username = target_user.username
+      db.session.commit()
+      msg = Message('Reset password for La Rose fanée', sender =   'smtp.gmail.com', recipients = [email])
+      msg.body = f"Hey {username}, your new temporary password is {temp}"
+      mail.send(msg)
+    return(redirect(url_for("login")))
+  except:
+    return(redirect(url_for("internal_server_error")))  
+    
