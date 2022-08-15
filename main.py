@@ -12,6 +12,7 @@ from flask_mail import Mail
 
 
 
+
 login_manager = LoginManager()
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -133,3 +134,6 @@ import Admin.account_manage
 if __name__ == "__main__":
       db.create_all()
       app.run(debug=True,ssl_context=('localhost+2.pem', 'localhost+2-key.pem'))
+
+
+
