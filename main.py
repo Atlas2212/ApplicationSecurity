@@ -11,6 +11,7 @@ from flask_mail import Mail
 
 
 
+
 login_manager = LoginManager()
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -32,6 +33,9 @@ class Users_db(db.Model):
   __card_expiry_date = db.Column(db.String)
   __full_name = db.Column(db.String)
   email = db.Column(db.String)
+  two_fa = db.Column(db.Boolean)
+  otp = db.Column(db.String)
+  otp_expire = db.Column(db.DateTime)
   
   def __init__(self,username,password,email):
     self.username = username
@@ -45,6 +49,9 @@ class Users_db(db.Model):
     self.__card_expiry_date = ""
     self.email = email
     self.fullname = ""
+    self.two_fa = True
+    self.otp = ""
+    self.otp_expire = None
 
   def is_active(self):
     if self.login_attempt > 3:
