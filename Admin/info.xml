@@ -1,0 +1,30 @@
+<?xml version = "1.0"?>
+
+<data>  
+   <warehouse id = "393">
+      <location>Kallang</location>
+      <manager>Harry</manager>
+	  <gender>male</gender>      
+	  <password>dda2248db2a848206f0d59dafbd168158e2e042b016a8de27a1e66fbaee03d07</password>	 
+   </warehouse>
+
+   <warehouse id = "512">
+      <location>Semb</location>
+      <manager>Handson</manager>
+	  <gender>Female</gender>
+      <password>ecf9cafcfd412724d382456fb244eb0485004ada8a82cc31172fc149e64fad02</password>	 
+   </warehouse>
+   
+   <warehouse id = "394">
+      <location>YiXun</location>
+      <manager>Bob</manager>
+	  <gender>male</gender>
+      <password>dc10d275486fecbc7dc1c8874c3d28b2ca83d804a01c911cb14143b3545171e9</password>	 
+   </warehouse>
+
+</data>
+
+
+
+
+

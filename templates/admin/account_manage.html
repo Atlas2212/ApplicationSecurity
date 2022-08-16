@@ -9,13 +9,51 @@
     </ul>
   {% endif %}
 {% endwith %}
+
+
+<style>
+  .container {
+    font-family: Quicksand-Bold;
+  }
+</style>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<div class="container login-container" style="padding-top: 4%;">
+<div class="row">
+<div class="col-md-6 login-form-1">
+<h3>Modify User Account</h3>
 <form action="/admin/api/modify_account" method="post">
-{{account_dict}}
-<input type="text" name="username">
-<input type="text" name="reset_password">
-<input type="text" name="login_attempt">
-<input type="text" name="role" id="">
-<input type="submit" name="" id="">
+  {{account_dict}}
+<div class="form-group">
+  <input type="text" name="username" placeholder="Username">
+</div>
+<div class="form-group">
+  <input type="text" name="reset_password" placeholder="Reset Password">
+</div>
+<div class="form-group">
+  <input type="text" name="login_attempt" placeholder="Login Attempts">
+</div>
+<div class="form-group">
+  <input type="text" name="role" id="" placeholder="Role">
+</div>
+<div class="form-group">
+<input type="submit"/>
+</div>
 </form>
-<form action="/admin/api/delete_account" method="post"><input type="text" name="username"></form>
+</div>
+<div class="col-md-6 login-form-2">
+<h3>Delete User Account</h3>
+<form action="/admin/api/delete_account" method="post">
+<div class="form-group">
+  <input type="text" name="username" placeholder="Username">
+</div>
+<div class="form-group" style="padding-bottom: 30%;">
+<input type="submit"/>
+</div>
+</form>
+</div>
+</div>
+</div> 
 {% endblock %}
