@@ -26,8 +26,6 @@ import pickle
 @app.route("/cart")
 @login_required
 def cart():
-    public_key = private_key.verifying_key
-    print("Verified:", public_key.verify(signature, b"Educative authorizes this shot"))
     cart = Cart_db("Test12345!","","")
     serialized = pickle.dumps(cart)
     filename = "cart.file"
