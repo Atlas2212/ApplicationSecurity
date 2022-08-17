@@ -67,7 +67,7 @@ def card_details():
       ciphertext = current_user._Users_db__card_number
       expiry_date_ciphertext = current_user._Users_db__card_expiry_date
       if ciphertext == "" or expiry_date_ciphertext == "":
-        return(render_template("frontend/card_details.html"))
+        return(render_template("frontend/card_details.html",card_details=["","",""]))
       key = MyAes.get_fixed_key()
       full_name = current_user.fullname
       decryptedtext_string = MyAes.decrypt(key, ciphertext).decode("utf8")
