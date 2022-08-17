@@ -1,8 +1,19 @@
-{% extends "frontend/base.html  " %}
+{% extends "frontend/base.html" %}
 {% block content %}
-{{card_details}}
-  
-  
+<!-- <form action="/api/add_card" method="post">
+<form action="/api/add_card" method="post">
+>>>>>>> 19c504fec78cf06bc39c15f0ce69a3a5177c4232
+<input type="text" name="card_number">
+<input type="text" name="cvv">
+<input type="text" name="expiry_date">
+<input type="submit">
+</form>
+<div class="container py-5"> -->
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <h1 style="text-align: center;padding-top:1%">{{messages[0]}}</h1>
+  {% endif %}
+{% endwith %}
     <div class="row">
       <div class="col-lg-7 mx-auto">
         <div class="bg-white rounded-lg shadow-sm p-5">
@@ -38,12 +49,12 @@
                 <form action="/api/add_card" method="post">
                 <div class="form-group">
                   <label for="username">Full name (on the card)</label>
-                  <input type="text" name="full_name" placeholder="Jason Doe" required class="form-control">
+                  <input type="text" name="full_name" placeholder="Jason Doe" required class="form-control" value="{{card_details[0]}}">
                 </div>
                 <div class="form-group">
                   <label for="cardNumber" name="card_number">Card number</label>
                   <div class="input-group">
-                    <input type="text" name="card_number" placeholder="Your card number" class="form-control" required>
+                    <input type="number" name="card_number" placeholder="Your card number" class="form-control" value="{{card_details[1]}}" required>
                     <div class="input-group-append">
                       <span class="input-group-text text-muted">
                                                   <i class="fa fa-cc-visa mx-1"></i>
@@ -58,8 +69,8 @@
                     <div class="form-group">
                       <label><span class="hidden-xs">Expiration</span></label>
                       <div class="input-group">
-                        <input type="number" placeholder="MM" name="expiry_date_month" class="form-control" required>
-                        <input type="number" placeholder="YY" name="expiry_date_year" class="form-control" required>
+                        <input type="number" placeholder="MM" name="expiry_date_month" class="form-control" value="{{(card_details[2]|string)[:2]}}"required>
+                        <input type="number" placeholder="YY" name="expiry_date_year" class="form-control"value="{{(card_details[2]|string)[3:]}}" required>
                       </div>
                     </div>
                   </div>
