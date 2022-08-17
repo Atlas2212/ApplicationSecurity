@@ -1,7 +1,16 @@
-{% extends "frontend/base.html" %}
-{% block content %}
-{{secret}}
-{% with messages = get_flashed_messages() %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="static\login.css"/>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+<body>
+	<a href="/" style="position: absolute; top: 8px; left: 16px;"><img height="40px" width="40px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Left_arrow.svg/434px-Left_arrow.svg.png" alt="arrow"></a>
+  {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}
@@ -10,8 +19,16 @@
     </ul>
   {% endif %}
 {% endwith %}
-<form action="/api/2FA" method="post">
-    <input type="text" name="otp" id="">
-    <input type="submit">
-</form>
-{% endblock %}
+<div class="container" id="container">
+	<div style="margin-top: 20%;">
+		<form action="/api/2FA" method="post">
+			<h1>OTP Form</h1>
+			<form action="/api/2FA" method="post">
+        <input type="text" name="otp" id="">
+        <input type="submit" class="btn btn-primary"/>
+      </form>
+		</form>
+	</div>
+</div>
+</body>
+</html>
