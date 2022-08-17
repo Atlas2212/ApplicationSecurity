@@ -21,10 +21,10 @@
 
         <body>
             <p1 class="p1">
-                <h2 class="Title"><a href="/admin" style="text-decoration: none; color: #91DDF2; padding-top: 1em;"><i>Admin Management</i></a></h2>
-                <div1><button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="/admin/manage"><span>Products</span></a></button>
-                <button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="/admin/account_manage"><span>Accounts</span></a></button>
-                <button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="/login"><span>Login</span></a></button>
+                <h2 class="Title"><a href="{{url_for('main_admin')}}" style="text-decoration: none; color: #91DDF2; padding-top: 1em;"><i>Admin Management</i></a></h2>
+                <div1><button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="{{url_for('manage')}}"><span>Products</span></a></button>
+                <button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="{{url_for('account_manage')}}"><span>Accounts</span></a></button>
+                <button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="{{url_for('login')}}"><span>Login</span></a></button>
                 <!---<button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="Contact.html"><span>Contact</span></a></button>-->
                 </div1>  
         </body>
