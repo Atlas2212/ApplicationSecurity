@@ -7,9 +7,9 @@ from tools.random_key import get_random_string
 from flask_login import LoginManager
 from urllib.parse import urlparse, urljoin
 from flask_bcrypt import Bcrypt
-import logging
-import MyAes
 from flask_mail import Mail
+
+
 
 
 
@@ -29,25 +29,36 @@ class Users_db(db.Model):
   admin = db.Column(db.Boolean)
   login_attempt = db.Column(db.Integer)
   active = db.Column(db.Boolean)
+  fullname = db.Column(db.String)
   __card_number = db.Column(db.String)
   __card_expiry_date = db.Column(db.String)
   __full_name = db.Column(db.String)
   email = db.Column(db.String)
+  two_fa = db.Column(db.Boolean)
+  otp = db.Column(db.String)
+  otp_expire = db.Column(db.DateTime)
   
   def __init__(self,username,password,email):
     self.username = username
     self.password = password
     self.token = get_random_string(8)
     self.admin = False
-    self.login_attempt = 0
     self.active = True
+    self.login_attempt = 0
     self.__full_name == ""
     self.__card_number = ""
     self.__card_expiry_date = ""
     self.email = email
+    self.fullname = ""
+    self.two_fa = True
+    self.otp = ""
+    self.otp_expire = None
 
   def is_active(self):
-    return(self.active)
+    if self.login_attempt > 3:
+      return(False)
+    else:
+      return(True)
 
   def get_id(self):
     return(self.username)
@@ -111,14 +122,18 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and \
            ref_url.netloc == test_url.netloc
-
-
-key = MyAes.get_fixed_key()
-ciphertext_file = "ciphertext.txt"
     
-import frontend
-import admin_main
+import User.frontend
+import User.login_system
+import User.cart
+import User.card_system
+import Admin.admin_main
+import Admin.product_manage
+import Admin.account_manage
 
 if __name__ == "__main__":
       db.create_all()
       app.run(debug=True,ssl_context=('localhost+2.pem', 'localhost+2-key.pem'))
+
+
+
