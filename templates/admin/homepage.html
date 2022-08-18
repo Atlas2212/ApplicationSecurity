@@ -1,5 +1,26 @@
 {% extends "admin/base.html" %}
 {% block content %}
+<link rel="stylesheet" href="static/table_responsive.css">
 <h1>Homepage</h1>
-{{xml_lst}}
+<table class="table">
+<thead class="thead-dark">
+<tr>
+{% for h in headers %}
+<th>{{h}}</th>
+{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for i in xml_lst %}
+<tr>
+{% for k in xml_lst[i] %}
+<td>{{k}}</td>
+{% endfor %}
+</tr>
+{%endfor%}
+</tbody>
+</table>
+<form action="/api/get_pickle_file" method="get">
+  <input type="submit" value="Import data from external database" class="btn btn-dark">
+</form>
 {% endblock %}

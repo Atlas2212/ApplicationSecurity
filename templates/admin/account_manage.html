@@ -24,8 +24,40 @@
 <div class="row">
 <div class="col-md-6 login-form-1">
 <h3>Modify User Account</h3>
+<link rel="stylesheet" href="static\table.css">
+  <style>
+    .container {
+      font-family: Quicksand-Bold;
+    }
+  </style>
+<div class="container">
+  <h2 style="padding-top: 3%; padding-bottom: 3%; font-family: Quicksand-Bold;">Product List</h2>
+  <table class="table table-bordered table-striped table-responsive-stack"  id="tableOne">
+     <thead class="thead-dark">
+      <tr><th>Username</th><th>Admin</th><th>Token</th><th>Login attempt</th></tr>
+     </thead>
+     <tbody>
+      {% for user in account_dict %}
+      <tr>
+      <td>{{user}}</td>
+      <td>{{account_dict[user][0]}}</td>
+      <td>{{account_dict[user][1]}}</td>
+      <td>{{account_dict[user][2]}}</td>
+      </tr>
+    {% endfor %}
+     </tbody>
+  </table>
+</div>
+</table>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<div class="container login-container" style="padding-top: 2%;">
+<div class="row">
+<div class="col-md-6 login-form-1">
+  <h3>Modify User Account</h3>
 <form action="/admin/api/modify_account" method="post">
-  {{account_dict}}
 <div class="form-group">
   <input type="text" name="username" placeholder="Username">
 </div>

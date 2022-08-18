@@ -1,4 +1,4 @@
-{% extends "frontend/base.html" %}
+{% extends "frontend/base.html  " %}
 {% block content %}
 <!-- <form action="/api/add_card" method="post">
 <form action="/api/add_card" method="post">
@@ -9,6 +9,7 @@
 <input type="submit">
 </form>
 <div class="container py-5"> -->
+  
   {% with messages = get_flashed_messages() %}
   {% if messages %}
     <h1 style="text-align: center;padding-top:1%">{{messages[0]}}</h1>

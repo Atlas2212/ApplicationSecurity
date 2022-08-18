@@ -25,7 +25,13 @@
   </table>
 </div>
 </table>
-
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <h3 style="text-align:center">{{message}}</h3>
+  {% endfor %}
+  {% endif %}
+{% endwith %}
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -48,7 +54,7 @@
 </div>
 <div class="col-md-6 login-form-2">
 <h3>Delete Item</h3>
-<form>
+<form action="/admin/api/delete_item" method="get">
 <div class="form-group">
   <input type="text" name="item_id" placeholder="Item ID">
 </div>
@@ -59,6 +65,7 @@
 </div>
 </div>
 </div> 
+
 
 <!-- <form action="/admin/api/add_item" method="get">
 <input type="text" name="name">
