@@ -2,15 +2,28 @@
 {% block content %}
 <h1 class="user"> User: {{deserialized_data}}</h1>
 <table class="table" style="margin-top: 5%;width: 88%;margin-left: auto;margin-right: auto;">
-  <tr><th>Item Name</th><th>Price</th><th>quanity</th><th>item_id</th></tr>
+  <tr><th>Item Name</th><th>Price</th><th>quanity</th><th>Remove from cart</th></tr>
   {%for i in user_cart%}
   <tr>
   <td>{{i[0]}}</td>
   <td>${{i[1]}}</td>
   <td>{{i[2]}}</td>
-  <td>{{i[3]}}</td>
+  <td>
+  <form action="/cart/api/remove_from_cart">
+  <input type="number" name="quantity" id="" value="1" required>
+  <input type="hidden" name="item_id" value="{{i[3]}}">
+  <input type="submit" value="remove from cart" class="btn btn-primary">
+  </form>
+  </td>
   </tr>
   {% endfor%}
   </table>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <h3>{{message}}</h3>
+  {% endfor %}
+  {% endif %}
+{% endwith %}
   <button class="button" style="vertical-align:middle" style="text-decoration: none;"><a href="/card_details" class="home-link" rel="noreferrer noopener"><span>Card Details</span></a></button>
 {% endblock %}

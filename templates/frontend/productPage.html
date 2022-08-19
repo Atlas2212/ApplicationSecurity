@@ -1,12 +1,25 @@
 {% extends "frontend/base.html" %}
 {% block content %}
-<table class="table" style="margin-top: 5%;width: 88%;margin-left: auto;margin-right: auto;">
-<tr><th>Item Name</th><th>Price</th></tr>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <h3 style="text-align:center;padding-top: 5vh;">{{message}}</h3>
+  {% endfor %}
+  {% endif %}
+{% endwith %}
+<table class="table" style="margin-top: 3%;width: 88%;margin-left: auto;margin-right: auto;">
+<tr><th>Item Name</th><th>Price</th><th>Add to cart</th></tr>
 {%for i in product_info%}
 <tr>
 <td>{{i[0]}}</td>
 <td>${{i[1]}}</td>
-<td>{{i[2]}}</td>
+<td>
+<form action="/cart/api/add_to_cart">
+<input type="hidden" name="item_id" value="{{i[2]}}">
+<input type="number" name="quantity" placeholder="1" value="1" required>
+<input type="submit" value="add to cart" class="btn btn-primary">
+</td>
+</form>
 </tr>
 {% endfor%}
 </table>
