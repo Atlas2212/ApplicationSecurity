@@ -1,11 +1,14 @@
 from flask import redirect, render_template
 from flask import url_for
-from flask import request, request
+from flask import request, request, flash
 from flask import session as user_session
 from flask_login import login_required, logout_user
 from __main__ import app
 from main import Users_db, db, Item_db, Cart_db
 import pickle
+def flash_msg(msg):
+  user_session.pop('_flashes', None)
+  flash(msg)
 # @app.route("/api/getcart")
 # def get_cart():
 #   try:
@@ -77,6 +80,13 @@ def add_to_cart():
         db.session.add(new_item)
         db.session.commit()
       return(redirect(url_for("cart")))
+    else:
+      if exists == False:
+        return(redirect(url_for("login")))
+      elif item_exists == False:
+        flash_msg("Invalid Item selected")
+        return(redirect(url_for("cart")))
+      return redirect(url_for("internal_server_error"))
   except:
     return redirect(url_for("internal_server_error"))
 
@@ -103,6 +113,16 @@ def remove_from_cart():
         else:
           cart_item.quantity -= quantity_deleted
         db.session.commit()
-      return(redirect(url_for("cart")))
+        return(redirect(url_for("cart")))
+      else:
+        if exists == False:
+          flash_msg("Login to access this function")
+          return(redirect(url_for("login")))
+        if item_exists == False:
+          flash_msg("Invalid item id entered")
+          return(redirect(url_for("cart")))
+        if item_in_cart == False:
+          flash_msg("Item is not in cart")
+          return(redirect(url_for("cart")))
     except:
       return(redirect(url_for("internal_server_error")))
