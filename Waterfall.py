@@ -10,7 +10,7 @@ import random
 app = Flask(__name__)
 app.secret_key = 'yuewei'
 ADMIN_USERNAME = "admin@bernice"
-ADMIN_PASSWORD = "iloveyuewei"
+ADMIN_PASSWORD = "yourmother"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "bernicelim584@gmail.com"

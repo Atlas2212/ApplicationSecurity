@@ -25,17 +25,21 @@ class UserModel(UserMixin, db.Model):
     def check_password(self,password):
         return check_password_hash(self.password_hash,password)
 
-    def set_username(self,username):
-        self.username_hash = generate_password_hash(username)
-     
-    def check_username(self,username):
-        return check_password_hash(self.password_hash,username)
-
     def set_email(self,email):
-        self.password_hash = generate_password_hash(email)
+        self.email = email
+    
+    def set_username(self,username):
+        self.username = username
+    
+    def set_security_answer1(self,security_answer1):
+        self.security_answer1 = security_answer1
 
-    def check_email(self,email):
-        return check_password_hash(self.password_hash,email)
+    def set_security_answer2(self,security_answer2):
+        self.security_answer2 = security_answer2
+
+    def set_security_answer3(self,security_answer3):
+        self.security_answer3 = security_answer3
+        
     
 
  
