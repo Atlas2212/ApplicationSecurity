@@ -1,0 +1,90 @@
+<style>
+  body {
+    background-color: #f2f2f2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  form {
+    border: 3px solid #f1f1f1;
+    width: 50%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffffff;
+  }
+
+  h3 {
+    text-align: center;
+    border: 3px solid #f1f1f1;
+    width: 50%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffffff;
+  }
+  input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  button:hover {
+    opacity: 0.8;
+  }
+  .cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+  }
+  .imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+  }
+  img.avatar {
+    width: 40%;
+    border-radius: 50%;
+  }
+  .container {
+    padding: 16px;
+  }
+  span.psw {
+    float: right;
+    padding-top: 16px;
+  }
+
+  @media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 100%;
+    }
+  }
+</style>
+<form action="" method = "POST">
+  <p>Email: <input type = "email" name = "email" required/></p>
+  <p>Username: <input type = "text" name = "username" required/></p>
+  <p>Security Question: Who do you love the most in life? <br>
+    <input type="text" name="security_answer1" required></p>
+  <p>Security Question: Which country were you born in? <br>
+    <input type="text" name="security_answer2" required></p>
+    <p>Security Question: What do you value most in life? <br>
+      <input type="text" name="security_answer3" required></p>
+  <p>Password: <input type = "password" name = "password" value= required/></p>
+  <p>Confirm Password: <input type = "password" name = "confirm_password" required/></p>
+  <div style="color:red">{{email_error}}</div>
+  <div style="color:red">{{password_error}}</div>
+  <p><input type = "submit" value = "Submit" /></p>
+</form>
+
+<h3>Already Have an Account?</h3><br>
+<h3><a href ="{{url_for('login')}}">Login Here</a></h3>

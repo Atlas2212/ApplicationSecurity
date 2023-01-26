@@ -1,3 +1,0 @@
-1. Classes for CSS and linking was improved so as to improve browser size compatability with different sized browsers
-2. Picture allocation and spacing was also modified to accommodate different sized browsers
-3. Unwanted and unnessary css was cleaned out and only vital and required elements remain
